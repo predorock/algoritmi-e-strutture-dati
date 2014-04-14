@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "funzioniordinamento.h"
+#include "lib/funzioniordinamento.h"
 
 typedef struct {
 	int num;
@@ -39,4 +39,16 @@ list* push(list* new,list* queue){
 			next = next->next;
 		}
 	}
+}
+
+list* newListElement(list* pointer, int number){
+	/*
+		Questa funzione appiccica un elemento di tipo list
+		al puntatore passato com argomento inizializzando il 
+		puntatore next a NULL e il numero con il valore desiderato
+	*/
+	pointer = (list*)malloc(sizeof(list));
+	pointer->next = NULL;
+	pointer->num = number;
+	return pointer;
 }
