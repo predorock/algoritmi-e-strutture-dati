@@ -11,8 +11,13 @@
 	#define INT 1
 	#define DOUBLE 2
 
-	void printArray( void* a, int l );
-	//Stampa un array di lunghezza 'len' e di tipo indicato all'interno della funzione
+	struct bucketList{
+		double val;
+		struct bucketList *next;
+	};
+
+	void printArray( void* a, int l, char *tipo );
+	//Stampa un array di lunghezza 'len' e di tipo '*tipo'
 
 	void printMatrix( int** m, int righe, int colonne);
 	//Stampa una matrice
@@ -58,6 +63,30 @@
 
 	int** radixSort( int** m, int len, int cifre );
 	//RadixSort
+
+	struct bucketList* createNode( double v );
+	//Crea un nodo per la bucketList
+
+	void addNode( struct bucketList *first, struct bucketList *p, int indice );
+	//Aggiunge un nodo alla bucketList nella posizione giusta
+
+	void riempiListaBucket( struct bucketList *first, double limiteInf, double limiteSup, double *a, int len);
+	//Mi riempie la bucketList con i valori ordinati e divisi per step
+
+	void printBucketList( struct bucketList *first, int len );
+	//Stampa una bucketList
+
+	double trovaValore( struct bucketList *first, int i );
+	//Serve per cercare l'ennesimo valore nella bucketList.
+
+	void riempiVettoreRisultato( struct bucketList *first, int len, double *b );
+	//Serve per riempire un vettore con i numeri ordinati.
+
+	double* bucketSort( double* a, int len );
+	//BucketSort
+
+
+
 
 #endif
 
