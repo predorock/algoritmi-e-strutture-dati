@@ -1,16 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h> 
 #include <stdarg.h>
 #include <unistd.h>
 #include "funzioniordinamento.h"
 
 //Si commenta sempre da sola
-void printArray( int* a, int l ){
+void printArray( void* a, int l, char* tipo ){
 
-	for( int i = 0; i < l; i++ )
-		fprintf(stdout, "%d ", a[i]);
-	putchar('\n');
+
+		if( strcmp( tipo, "int" ) == 0 ){
+			int *tmp;
+			tmp = a;
+
+			for( int i = 0; i < l; i++ )
+				fprintf(stdout, "%d ", tmp[i]);
+			putchar('\n');
+		}
+
+		else if( strcmp( tipo, "double" ) == 0 ){
+			double *tmp;
+			tmp = a;
+
+			for( int i = 0; i < l; i++ )
+				fprintf(stdout, "%f ", tmp[i]);
+			putchar('\n');
+		}
+
+		else
+			fprintf(stdout, "Errore di tipo: %s non esiste\n", tipo);
 }
 
 void printMatrix( int** m, int righe, int colonne ){
@@ -95,7 +114,7 @@ int* generaArrayCounting( int len, int g){
 	return a;
 }
 
-void generateArray( int num, int* a, int len, ... ){
+void* generateArray( int num, int tipo, int len, ... ){
 
 	//VARARGS
 	va_list arguments;			//Variabile di tipo va_list
@@ -107,31 +126,79 @@ void generateArray( int num, int* a, int len, ... ){
 	//Se i numeri abbiamo deciso di inserirli randomicamente avremo un 4°
 	//argomento in ingresso alla funzione che mi indicherà il range entro
 	//il quale devo generare i numeri.
-	if( num == RANDOM ){
-		c = 'y';			
-		range = va_arg(arguments, int);		//Recuperiamo il valore del successivo argomento.
-			
-		#ifdef DEBUG
-			fprintf(stdout, "range: %d", range);
-		#endif		
-	}
+		if( tipo == INT ){ 
+			int* a = malloc( len * sizeof(int) );
 
-	//Se vogliamo generare i numeri randomicamente
-	if( c == 'y'){
-		for( int i = 0; i < len; i++ )
-			a[i]=rand()%range;
-	}
-	//Se vogliamo inserire noi i numeri a mano
-	else{
-		int tmp;
-		for( int i = 0; i < len; i++ ){
-			fprintf(stdout, "Inserisci %d° numero: ", i+1);
-			fscanf(stdin, "%d", &tmp);
-			a[i]=tmp;	
+			if( num == RANDOM ){
+				c = 'y';			
+				range = va_arg(arguments, int);		//Recuperiamo il valore del successivo argomento.
+					
+				#ifdef DEBUG
+					fprintf(stdout, "range: %d", range);
+				#endif		
+			}
+
+			//Se vogliamo generare i numeri randomicamente
+			if( c == 'y'){
+				for( int i = 0; i < len; i++ )
+					a[i]=rand()%range;
+			}
+			//Se vogliamo inserire noi i numeri a mano
+			else{
+				int tmp;
+				for( int i = 0; i < len; i++ ){
+					fprintf(stdout, "Inserisci %d° numero: ", i+1);
+					fscanf(stdin, "%d", &tmp);
+					a[i]=tmp;	
+				}
+			}
+
+			printArray(a, len, "int");
+			fprintf(stdout, "generateArray per INT terminata correttamente\n");
+
+			return a;
 		}
-	}
 
-	fprintf(stdout, "generateArray terminata correttamente\n");
+		else if( tipo == DOUBLE ){
+			double *a = malloc( len*sizeof(double) );
+			if( num == RANDOM ){
+				c = 'y';			
+				range = va_arg(arguments, int);		//Recuperiamo il valore del successivo argomento.
+					
+				#ifdef DEBUG
+					fprintf(stdout, "range: %d", range);
+				#endif		
+			}
+
+			//Se vogliamo generare i numeri randomicamente
+			if( c == 'y'){
+				for( int i = 0; i < len; i++ ){
+					a[i]=rand()%range;
+					printf("GeneateArray: i = %d, a[i] = %f\n", i, a[i]);
+				}
+			}
+			//Se vogliamo inserire noi i numeri a mano
+			else{
+				int tmp;
+				for( int i = 0; i < len; i++ ){
+					fprintf(stdout, "Inserisci %d° numero: ", i+1);
+					fscanf(stdin, "%d", &tmp);
+					a[i]=tmp;	
+				}
+			}
+
+			//#ifdef DEBUG
+				printArray(a, len, "double");
+				fprintf(stdout, "generateArray per DOUBLE terminata correttamente\n");
+			//#endif
+
+			return a;
+		}
+
+		else{
+			fprintf(stdout, "Errore di tipo: %d non esiste o non ancora implementato\n", tipo);
+			return NULL;
+		}
 }
 
 int** generateMatrixRadix( int len, int cifre ){
@@ -149,12 +216,12 @@ int** generateMatrixRadix( int len, int cifre ){
 		m[i] = malloc( cifre*sizeof(int) );
 				
 		if( c == 'y' )
-			generateArray(RANDOM, m[i], cifre, 9);
+			m[i] = generateArray(RANDOM, INT, cifre, 9);
 		else
-			generateArray(NOTRANDOM, m[i], cifre);
+			m[i] = generateArray(NOTRANDOM, INT, cifre);
 
 		#ifdef DEBUG
-			printArray(m[i], cifre);
+			printArray(m[i], cifre, "int");
 		#endif
 	}
 
@@ -204,7 +271,7 @@ int* countingSort( int* a, int lenA ){
 	int *c = calloc( lenC, sizeof(int) );
 
 	#ifdef DEBUG
-		printArray(c, lenC);
+		printArray(c, lenC, "int");
 	#endif
 
 	//STEP 1
@@ -213,7 +280,7 @@ int* countingSort( int* a, int lenA ){
 	}
 
 	#ifdef DEBUG
-		printArray(c, lenC);
+		printArray(c, lenC, "int");
 	#endif	
 
 	//STEP 2
@@ -222,7 +289,7 @@ int* countingSort( int* a, int lenA ){
 	}
 
 	#ifdef DEBUG
-		printArray(c, lenC);
+		printArray(c, lenC, "int");
 	#endif
 
 	//STEP 3
@@ -235,7 +302,7 @@ int* countingSort( int* a, int lenA ){
 	}
 
 	#ifdef DEBUG
-		printArray(b, lenA);
+		printArray(b, lenA, "int");
 	#endif
 	
 	return b;
@@ -296,7 +363,7 @@ void heapify( int* a, int i, int heapsize ){
 		a[maggiore] = tmp;
 
 		fprintf(stdout, "\nStampiamo l'array poi chiamiamo ricorsivamente heapify:\n");
-		printArray(a, heapsize);
+		printArray(a, heapsize, "int");
 		//fprintf(stdout, "\npremi INVIO per continuare...\n");
 		//getchar();
 		heapify(a, maggiore+1, heapsize);
@@ -364,8 +431,8 @@ void copiaArray(int* b, int* m, int len){
 	}
 
 	#ifdef DEBUG
-		printArray(m, len);
-		printArray(b, len);
+		printArray(m, len, "int");
+		printArray(b, len, "int");
 	#endif
 }
 
@@ -380,12 +447,12 @@ int** radixSort( int** m, int len, int cifre ){
 		}
 		fprintf(stdout, "- - - - - - - - CIFRE DA ORDINARE E CIFRE ORDINATE - - - - - - - -\n\n");
 		fprintf(stdout, "tmp[]:\n");
-		printArray(tmp, len);
+		printArray(tmp, len, "int");
 		
 
 		step = countingSort( tmp, len );
 		fprintf(stdout, "step[]:\n");
-		printArray(step, len);
+		printArray(step, len, "int");
 		fprintf(stdout, "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n");
 		m = ordinamentoRadix( m, step, len, cifre, i);
 
@@ -397,4 +464,128 @@ int** radixSort( int** m, int len, int cifre ){
 	}
 
 	return m;
+}
+
+struct bucketList* createNode( double v ){
+
+	struct bucketList *p;
+	p = malloc( 1 * sizeof(struct bucketList) );
+
+	p->val = v;
+	p->next = NULL;
+	
+	printf("valore: %f\n", p->val);
+
+
+	return p;
+}
+
+void addNode( struct bucketList *first, struct bucketList *p, int indice ){
+
+	printf("indice: %d\n", indice);
+
+	struct bucketList *current = first[indice].next;
+	struct bucketList *prev = &first[indice];
+	
+	#ifdef DEBUG
+		printf("valore: %f\n", p->val);
+		printf("current: %d, prev: %d NULL: %d\n", current, prev, NULL);
+	#endif
+
+	for( /*vuota*/; current != NULL; current = current->next, prev = prev->next ){
+		if( current->val > p->val ){
+			p->next = current;
+			prev->next = p;
+
+			printBucketList(first, 10);
+
+			return;
+		}
+	}
+		
+	prev->next = p;
+
+	printBucketList(first, 10);
+
+	return;
+}
+
+void riempiListaBucket( struct bucketList *first, double limiteInf, double limiteSup, double *a, int len){
+
+	//Se sto riempiendo la prima posizione di first step varrà 1 e cosi via.
+	for(int i = 0; i<len; i++){
+		printf("a[%d] = %f, limiteInf = %f, limiteSup = %f\n", i, a[i], limiteInf, limiteSup);
+		if( (a[i] >= limiteInf) && (a[i] < limiteSup) ){
+			printf("aggiungo nodo a[i] = %f, limiteSup: %f\n", a[i], limiteSup);
+			printf("condizioni booleane: %d - %f - %d\n", (a[i] >= limiteInf), (limiteSup - a[i]), (0.30 < 0.3) );
+			//Step torna a servirmi come indice di un array, quindi con valori che 
+			//vanno da 0 a n-1, quindi sottraiamo 1.
+			struct bucketList *tmp = createNode( a[i] );
+			addNode( first, tmp, (limiteInf*10) );
+		}
+	}
+
+}
+
+void printBucketList( struct bucketList *first, int len ){
+
+	struct bucketList *p;
+
+	for( int i = 0; i<len; i++ ){
+		fprintf(stdout, "Lista in posizione %d: ", i);
+		for( p = &first[i]; p->next != NULL; p = p->next ){
+			fprintf(stdout, "%f ", p->next->val );
+		}
+		putchar('\n');
+	}
+}
+
+double* riempiVettoreRisultato( struct bucketList *first, int len ){
+
+	double *b;
+	b = malloc( len*sizeof(double) );
+
+	for( int i = 0, j = 0; i<len; i++ ){
+		for( struct bucketList *current = first[i].next; current != NULL; current = current->next ){
+			b[j++] = current->val;
+		}
+	}
+
+	return b;
+}
+
+
+double* bucketSort( double* a, int len ){
+	//La bucketList è un array di puntatori, ognuno che punta ad una lista contenenti
+	//i numeri da un tot range ad un altro tot range.
+	struct bucketList *first;
+	first = calloc( len, sizeof(struct bucketList) );
+
+	double *b;
+
+	for( int i = 0; i<len; i++){
+		first[i].next = NULL;
+	}
+
+	printBucketList(first, len);
+
+	//Se len è 10 nella lista contenuta nella prima posizione dell'array andranno
+	//i numeri da 0,0 < val <= 0,1, nella seconda posizione da 0,1 < val <= 0,2
+	//e così via.
+	double step = (1.0 / len);
+
+	for( int i = 0; i < len; i++ ){
+		//Siccome i sarà un fattore moltiplicativo mi serve che vada da 1 ad n e non
+		//da 0 a n-1
+		printf("\ni = %d, step = %f, %f %f\n", i, step, (step*i), ((step*i)+step) );
+		riempiListaBucket( first, (step*i), ((step*i)+step), a, len );	
+	}
+	
+	printBucketList( first, len );
+
+	b = riempiVettoreRisultato( first, len );
+
+	printArray(b, len, "double");
+
+	return NULL;
 }
