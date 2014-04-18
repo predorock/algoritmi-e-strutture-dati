@@ -484,14 +484,15 @@ void addNode( struct bucketList *first, struct bucketList *p, int indice ){
 
 	printf("indice: %d\n", indice);
 
-	struct bucketList* tmp;
+	struct bucketList *current;
+	struct bucketList *prev;
 	
 	printf("valore: %f\n", p->val);
-	for( tmp = &first[indice]; tmp->next != NULL; tmp = tmp->next ){
-		if( tmp->next->val > p->val ){
-			printf("tmp->next->val: %f p->val: %f\n", tmp->next->val, p->val);
-			p->next = tmp->next;
-			tmp->next = p;
+	for( current = first[indice].next, prev = &first[indice]; current->next != NULL; current = current->next, prev = prev->next ){
+		if( current->val > p->val ){
+			printf("current->next->val: %f p->val: %f\n", current->next->val, p->val);
+			p->next = current;
+			prev->next = p;
 
 			printBucketList(first, 10);
 
@@ -499,7 +500,7 @@ void addNode( struct bucketList *first, struct bucketList *p, int indice ){
 		}
 	}
 		
-	tmp->next = p;
+	prev->next = p;
 	p->next = NULL; //ridondante
 
 	printBucketList(first, 10);
