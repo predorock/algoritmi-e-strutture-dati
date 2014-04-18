@@ -484,13 +484,16 @@ void addNode( struct bucketList *first, struct bucketList *p, int indice ){
 
 	printf("indice: %d\n", indice);
 
-	struct bucketList *current;
-	struct bucketList *prev;
+	struct bucketList *current = first[indice].next;
+	struct bucketList *prev = &first[indice];
 	
-	printf("valore: %f\n", p->val);
-	for( current = first[indice].next, prev = &first[indice]; current->next != NULL; current = current->next, prev = prev->next ){
+	#ifdef DEBUG
+		printf("valore: %f\n", p->val);
+		printf("current: %d, prev: %d NULL: %d\n", current, prev, NULL);
+	#endif
+
+	for( /*vuota*/; current != NULL; current = current->next, prev = prev->next ){
 		if( current->val > p->val ){
-			printf("current->next->val: %f p->val: %f\n", current->next->val, p->val);
 			p->next = current;
 			prev->next = p;
 
@@ -501,10 +504,8 @@ void addNode( struct bucketList *first, struct bucketList *p, int indice ){
 	}
 		
 	prev->next = p;
-	p->next = NULL; //ridondante
 
 	printBucketList(first, 10);
-
 
 	return;
 }
@@ -514,8 +515,9 @@ void riempiListaBucket( struct bucketList *first, double limiteInf, double limit
 	//Se sto riempiendo la prima posizione di first step varrà 1 e cosi via.
 	for(int i = 0; i<len; i++){
 		printf("a[%d] = %f, limiteInf = %f, limiteSup = %f\n", i, a[i], limiteInf, limiteSup);
-		if( a[i] >= limiteInf && a[i] < limiteSup ){
-			printf("aggiungo nodo a[i] = %f\n", a[i]);
+		if( (a[i] >= limiteInf) && (a[i] < limiteSup) ){
+			printf("aggiungo nodo a[i] = %f, limiteSup: %f\n", a[i], limiteSup);
+			printf("condizioni booleane: %d - %f - %d\n", (a[i] >= limiteInf), (limiteSup - a[i]), (0.30 < 0.3) );
 			//Step torna a servirmi come indice di un array, quindi con valori che 
 			//vanno da 0 a n-1, quindi sottraiamo 1.
 			struct bucketList *tmp = createNode( a[i] );
@@ -542,7 +544,7 @@ double* bucketSort( double* a, int len ){
 	//La bucketList è un array di puntatori, ognuno che punta ad una lista contenenti
 	//i numeri da un tot range ad un altro tot range.
 	struct bucketList *first;
-	first = calloc( len, sizeof(struct bucketList*) );
+	first = calloc( len, sizeof(struct bucketList) );
 
 	for( int i = 0; i<len; i++){
 		first[i].next = NULL;
