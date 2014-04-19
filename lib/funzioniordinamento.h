@@ -78,9 +78,6 @@
 	void printBucketList( struct bucketList *first, int len );
 	//Stampa una bucketList
 
-	double trovaValore( struct bucketList *first, int i );
-	//Serve per cercare l'ennesimo valore nella bucketList.
-
 	double* riempiVettoreRisultato( struct bucketList *first, int len );
 	//Serve per riempire un vettore con i numeri ordinati.
 

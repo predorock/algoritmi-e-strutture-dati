@@ -542,10 +542,14 @@ void printBucketList( struct bucketList *first, int len ){
 
 double* riempiVettoreRisultato( struct bucketList *first, int len ){
 
+	//Creiamo il vettore in cui mettiamo i numeri ordinati
 	double *b;
 	b = malloc( len*sizeof(double) );
 
+	//Il ciclo esterno serve per scorrere i first in verticale.
 	for( int i = 0, j = 0; i<len; i++ ){
+		//Cerchiamo se ci sono elementi nelle varie liste e man mano che li incontriamo
+		//li mettiamo nel vettore risultante.
 		for( struct bucketList *current = first[i].next; current != NULL; current = current->next ){
 			b[j++] = current->val;
 		}
