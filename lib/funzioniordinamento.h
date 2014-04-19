@@ -1,5 +1,7 @@
 #ifndef FUNZIONIORDINAMENTO_H
 	#define FUNZIONIORDINAMENTO_H
+	
+	#define EPSILON 0.00001f
 
 	//I numeri li genererò a random da 1 a LIMITE
 	#define LIMITE 10
@@ -84,6 +86,9 @@
 
 	double* bucketSort( double* a, int len );
 	//BucketSort
+
+	//confronta due valori float con una precisione definita dalla macro EPSILON
+	int floatsEqual(float f1, float f2);
 
 
 

@@ -589,3 +589,7 @@ double* bucketSort( double* a, int len ){
 
 	return NULL;
 }
+
+int floatsEqual(float f1, float f2){
+    return fabs(f1 - f2) < EPSILON; // or fabsf
+}
