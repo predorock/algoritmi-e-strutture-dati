@@ -480,7 +480,7 @@ struct bucketList* createNode( double v ){
 	return p;
 }
 
-void addNode( struct bucketList *first, struct bucketList *p, int indice ){
+void addNode( struct bucketList *first, struct bucketList *p, int indice, int len ){
 
 	printf("indice: %d\n", indice);
 
@@ -497,7 +497,7 @@ void addNode( struct bucketList *first, struct bucketList *p, int indice ){
 			p->next = current;
 			prev->next = p;
 
-			printBucketList(first, 10);
+			printBucketList(first, len);
 
 			return;
 		}
@@ -505,7 +505,7 @@ void addNode( struct bucketList *first, struct bucketList *p, int indice ){
 		
 	prev->next = p;
 
-	printBucketList(first, 10);
+	printBucketList(first, len);
 
 	return;
 }
@@ -521,7 +521,7 @@ void riempiListaBucket( struct bucketList *first, double limiteInf, double limit
 			//Step torna a servirmi come indice di un array, quindi con valori che 
 			//vanno da 0 a n-1, quindi sottraiamo 1.
 			struct bucketList *tmp = createNode( a[i] );
-			addNode( first, tmp, (limiteInf*10) );
+			addNode( first, tmp, (limiteInf*len), len );
 		}
 	}
 

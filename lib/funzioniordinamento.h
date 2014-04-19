@@ -67,7 +67,7 @@
 	struct bucketList* createNode( double v );
 	//Crea un nodo per la bucketList
 
-	void addNode( struct bucketList *first, struct bucketList *p, int indice );
+	void addNode( struct bucketList *first, struct bucketList *p, int indice, int len );
 	//Aggiunge un nodo alla bucketList nella posizione giusta
 
 	void riempiListaBucket( struct bucketList *first, double limiteInf, double limiteSup, double *a, int len);
@@ -79,7 +79,7 @@
 	double trovaValore( struct bucketList *first, int i );
 	//Serve per cercare l'ennesimo valore nella bucketList.
 
-	void riempiVettoreRisultato( struct bucketList *first, int len, double *b );
+	double* riempiVettoreRisultato( struct bucketList *first, int len );
 	//Serve per riempire un vettore con i numeri ordinati.
 
 	double* bucketSort( double* a, int len );
